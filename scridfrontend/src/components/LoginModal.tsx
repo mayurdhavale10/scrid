@@ -6,7 +6,7 @@ import Image from "next/image";
 interface LoginModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onSwitch: () => void; // ✅ Add this prop for switching to Signup
+  onSwitch: () => void;
 }
 
 export default function LoginModal({ isOpen, onClose, onSwitch }: LoginModalProps) {
@@ -16,11 +16,33 @@ export default function LoginModal({ isOpen, onClose, onSwitch }: LoginModalProp
 
   if (!isOpen) return null;
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Login with:", { email, password });
-    // Add login logic here
-    onClose();
+
+    try {
+      const response = await fetch("http://localhost:8080/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: email,
+          password: password,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert("✅ Login successful");
+        onClose();
+      } else {
+        alert(`❌ Login failed: ${data.error}`);
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      alert("Something went wrong!");
+    }
   };
 
   return (
