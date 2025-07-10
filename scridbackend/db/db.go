@@ -1,22 +1,34 @@
 package db
 
 import (
-	"github.com/mayurdhavale10/scridbackend/models"
-	"gorm.io/driver/sqlite"
-	"gorm.io/gorm"
+	"fmt"
+	"log"
 
-	_ "modernc.org/sqlite" // ✅ Import modern driver
+	"scridbackend/models"
+
+	"gorm.io/driver/postgres"
+	"gorm.io/gorm"
 )
 
 var DB *gorm.DB
 
 func Init() {
+	dsn := "host=localhost user=postgres password=@Abdrocks17 dbname=scrid port=5432 sslmode=disable"
 	var err error
-	// GORM will now use modernc.org/sqlite
-	DB, err = gorm.Open(sqlite.Open("scrid.db"), &gorm.Config{})
+	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
-		panic("failed to connect database")
+		log.Fatalf("❌ Failed to connect to database: %v", err)
 	}
 
-	DB.AutoMigrate(&models.User{})
+	fmt.Println("🔄 Running migrations for models...")
+
+	// 🛠️ For development: Drop tables (optional, avoid in production)
+	// _ = DB.Migrator().DropTable(&models.User{}, &models.OTP{})
+
+	// ✅ AutoMigrate all models
+	if err := DB.AutoMigrate(&models.User{}, &models.OTP{}); err != nil {
+		log.Fatalf("❌ Failed to run auto migration: %v", err)
+	}
+
+	fmt.Println("✅ Connected to PostgreSQL and ran migrations successfully!")
 }

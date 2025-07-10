@@ -1,10 +1,8 @@
-/* src/app/globals.css */
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Optional: Add your custom variables for light/dark theme */
+/* 🌗 Theme Colors */
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -17,9 +15,53 @@
   }
 }
 
+/* 🌐 Base Styling */
 body {
   background-color: var(--background);
   color: var(--foreground);
   font-family: system-ui, sans-serif;
   scroll-behavior: smooth;
+}
+
+/* 🔁 Marquee-style Horizontal Animation for Scrap Cards */
+@layer utilities {
+  .animate-marquee-right {
+    animation: marqueeRight 60s linear infinite;
+  }
+
+  @keyframes marqueeRight {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  /* Optional additional scroll animation (left-to-left if needed) */
+  .animate-scroll-trail {
+    animation: scrollTrail 40s linear infinite;
+  }
+
+  @keyframes scrollTrail {
+    0% {
+      transform: translateX(0%);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+}
+
+/* 🖱️ Enhanced Scrollbars */
+::-webkit-scrollbar {
+  height: 6px;
+  width: 6px;
+}
+::-webkit-scrollbar-thumb {
+  background-color: #a0a0a0;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-track {
+  background-color: #f0f0f0;
 }
